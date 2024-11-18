@@ -40,11 +40,7 @@ export default function RootLayout({ children }) {
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <SignedOut>
-            <SignInButton>
-              <button className="bg-gray-400 px-3 py-1 rounded-xl">
-                Sign in
-              </button>
-            </SignInButton>
+            <SignInButton></SignInButton>
           </SignedOut>
           <SignedIn>
             <UserButton />

@@ -1,4 +1,5 @@
 "use client"
+// import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { useEffect } from "react";
 
@@ -14,7 +15,7 @@ export default function Home() {
 
   return (
     <>
-      <div>
+      <div suppressHydrationWarning>
         Hello World
 
       </div>
