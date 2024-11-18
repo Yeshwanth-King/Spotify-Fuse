@@ -8,6 +8,8 @@ export default function Home() {
     (async () => {
       const response = await axios.post("/api/test", { id: 1 })
       console.log(response.data)
+      // const { user } = useUser();
+      // console.log(user)
     })();
 
 
