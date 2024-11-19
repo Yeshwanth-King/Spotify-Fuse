@@ -10,6 +10,10 @@ module.exports = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        spotify: {
+          green: '#1DB954',
+          black: '#121212',
+        },
       },
     },
   },

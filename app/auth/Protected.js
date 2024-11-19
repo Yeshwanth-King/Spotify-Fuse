@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+
 const { NextResponse } = require("next/server")
 
 export const ProtectedRoute = async (req, res, next) => {
@@ -8,11 +8,10 @@ export const ProtectedRoute = async (req, res, next) => {
     next();
 }
 
-export const requireAdmin = async (req, res, next) => {
+export const requireAdmin = async (user) => {
     try {
         // const currentEmail = await clerkClient.users.getUser(req.auth.userId);
-        const currentEmail = await currentUser();
-        const isAdmin = currentEmail.primaryEmailAddress.emailAddress === process.env.ADMIN_EMAIL;
+        const isAdmin = user.email === process.env.ADMIN_EMAIL;
         if (!isAdmin) {
             return NextResponse.json({ message: "Must be Admin" })
         }

@@ -9,4 +9,4 @@ const SongSchema = new mongoose.Schema({
 
 }, { timestamps: true })
 
-export const Song = mongoose.model("Song", SongSchema);
+export const Song = mongoose.models.Song || mongoose.model("Song", SongSchema);

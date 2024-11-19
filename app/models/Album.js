@@ -7,4 +7,4 @@ const AlbumSchema = new mongoose.Schema({
     songs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Song" }],
 }, { timestamps: true })
 
-export const Album = mongoose.model("Album", AlbumSchema);
+export const Album = mongoose.models.Album || mongoose.model("Album", AlbumSchema);
