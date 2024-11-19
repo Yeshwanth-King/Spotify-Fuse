@@ -3,19 +3,26 @@ import { User } from '@/app/models/User';
 import { NextResponse } from 'next/server';
 
 export async function POST(req) {
-    const data = await req.json();
-    console.log(data)
+    try {
+        const data = await req.json();
+        console.log(data)
 
-    await connectDB();
+        await connectDB();
 
-    const alreadyUser = await User.find({ email: data.email })
+        const alreadyUser = await User.find({ email: data.email })
 
-    if (alreadyUser.length > 0) {
-        return NextResponse.json({ message: "Already a User exists" })
+        if (alreadyUser.length > 0) {
+            return NextResponse.json({ message: "Already a User exists" })
+        }
+
+        const user = await User.create(data)
+        console.log(user)
+    } catch (error) {
+
+        console.log(error);
+        return NextResponse.json({ error });
+
     }
-
-    const user = await User.create(data)
-    console.log(user)
 
     // Mock saving user
     return NextResponse.json({ success: true, message: 'User registered successfully', data });
