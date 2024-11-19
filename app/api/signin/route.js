@@ -1,8 +1,9 @@
 import { connectDB } from '@/app/lib/connectDB';
 import { User } from '@/app/models/User';
 import { NextResponse } from 'next/server';
+import jws from "jsonwebtoken"
 
-export async function POST(req) {
+export async function POST(req, res) {
     try {
         const data = await req.json();
         await connectDB();
@@ -10,7 +11,14 @@ export async function POST(req) {
 
         if (user) {
             if (user.password === data.password) {
-                return NextResponse.json({ user })
+                const token = jws.sign({ _id: user._id, email: user.email, name: user.name }, process.env.JWS_SECRET, {});
+                const response = NextResponse.json({ user });
+                response.cookies.set("token", token, {
+                    httpOnly: true,
+                    maxAge: 60 * 60 * 1,
+                    sameSite: 'strict',
+                })
+                return response;
             }
             else {
                 return NextResponse.json({ error: 'Invalid Password' })

@@ -6,15 +6,11 @@ export async function POST(req) {
     try {
         const data = await req.json();
         console.log(data)
-
         await connectDB();
-
         const alreadyUser = await User.find({ email: data.email })
-
         if (alreadyUser.length > 0) {
             return NextResponse.json({ message: "Already a User exists" })
         }
-
         const user = await User.create(data)
         console.log(user)
     } catch (error) {

@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { UserContextProvider } from "./components/UserContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -22,13 +23,20 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link type="image/png" sizes="16x16" rel="icon" href="./faviconn.png" />
+        <link
+          rel="icon"
+          href="/faviconn.ico"
+          className="text-green-400"
+          sizes="any"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Toaster position="top-right" richColors />
-        {children}
+        <UserContextProvider>
+          <Toaster position="top-right" richColors />
+          {children}
+        </UserContextProvider>
       </body>
     </html>
   );

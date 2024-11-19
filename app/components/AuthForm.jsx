@@ -1,12 +1,13 @@
 // app/components/AuthForm.js
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { IoMdArrowBack } from "react-icons/io";
 import axios from "axios";
 import { toast } from "sonner";
+import { UserContext } from "./UserContext";
 
 export default function AuthForm({ mode }) {
   const router = useRouter();
@@ -14,6 +15,7 @@ export default function AuthForm({ mode }) {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
+  const { user, setUser } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,10 +36,12 @@ export default function AuthForm({ mode }) {
 
     if (response.status == 200) {
       console.log(response.data);
+      setUser(response.data.user);
       if (response.data.error) {
         toast.error(response.data.error);
       } else {
         toast.success("Logined Succesfull");
+        router.push("/");
       }
     } else {
       console.log("Error: " + response.data);
