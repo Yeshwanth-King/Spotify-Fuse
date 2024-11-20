@@ -1,11 +1,15 @@
 import NavBar from "./components/NavBar";
+import Sidebar from "./components/SideBar";
 
 export default function Home() {
   return (
     <>
-      <div>
+      <div className="bg-black min-h-screen">
         <NavBar />
-        Hello World
+        <div className="flex">
+          <Sidebar />
+          <div> Main COntetnt</div>
+        </div>
       </div>
     </>
   );

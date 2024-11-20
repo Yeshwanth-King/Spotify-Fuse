@@ -56,7 +56,7 @@ export default function NavBar() {
 
   return (
     <>
-      <div className="bg-black p-5  flex justify-between items-center">
+      <div className="bg-black p-3  flex justify-between items-center">
         <div className="w-8 h-8 rounded-full overflow-hidden">
           {/* <img className="object-cover" src="./favicon.ico" alt="" /> */}
           <img
@@ -74,7 +74,7 @@ export default function NavBar() {
               <IoSearchOutline className="text-[#b3b3b3] text-3xl" />
               <input
                 type="text"
-                className="bg-transparent outline-none text-white w-full px-2"
+                className="bg-transparent outline-none focus:outline-none text-white w-full px-2"
                 placeholder="What do you want to play?"
               />
               <LuInbox className="text-[#b3b3b3] text-3xl" />
