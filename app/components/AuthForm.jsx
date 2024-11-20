@@ -1,7 +1,7 @@
 // app/components/AuthForm.js
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { IoMdArrowBack } from "react-icons/io";
@@ -40,7 +40,9 @@ export default function AuthForm({ mode }) {
       if (response.data.error) {
         toast.error(response.data.error);
       } else {
-        toast.success("Logined Succesfull");
+        toast.success("Logined Succesfull", {
+          duration: 1000,
+        });
         router.push("/");
       }
     } else {
@@ -52,6 +54,12 @@ export default function AuthForm({ mode }) {
     ev.preventDefault();
     router.push("/");
   };
+  useEffect(() => {
+    (async () => {
+      const res = await axios.get("/api/connectDB");
+      console.log(res.data);
+    })();
+  }, []);
 
   return (
     <div className="flex min-h-screen items-center relative justify-center bg-gray-900 text-white">

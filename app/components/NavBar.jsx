@@ -13,6 +13,7 @@ import Link from "next/link";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const menuRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -35,10 +36,20 @@ export default function NavBar() {
     ev.preventDefault();
     const response = await axios.delete("/api/logout");
     setUser(null);
-    toast.success(response.data.message);
+    toast.success(response.data.message, {
+      duration: 1000,
+    });
   };
 
   const { user, setUser } = useContext(UserContext);
+
+  useEffect(() => {
+    console.log(user);
+    if (user?.email === process.env.ADMIN_EMAIL) {
+      setIsAdmin(true);
+    }
+  }, [user, setUser]);
+
   return (
     <>
       <div className="bg-black p-5  flex justify-between items-center">
@@ -82,7 +93,14 @@ export default function NavBar() {
           )}
 
           {user && (
-            <>
+            <div className="flex gap-1 items-center justify-center">
+              {isAdmin && (
+                <div>
+                  <button className="bg-gray-200 px-3 py-1 rounded-full">
+                    Admin Page
+                  </button>
+                </div>
+              )}
               <div
                 onClick={(e) => {
                   e.stopPropagation(); // Prevent immediate close on click
@@ -92,7 +110,7 @@ export default function NavBar() {
               >
                 <DynamicBadge letter={user.name[0]} />
               </div>
-            </>
+            </div>
           )}
 
           {isMenuOpen && (
