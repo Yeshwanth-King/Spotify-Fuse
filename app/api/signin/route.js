@@ -18,6 +18,11 @@ export async function POST(req, res) {
                     maxAge: 60 * 60 * 1,
                     sameSite: 'strict',
                 })
+                if (user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+                    response.cookies.set("isAdmin", "true", {
+                        httpOnly: true,
+                    })
+                }
                 return response;
             }
             else {

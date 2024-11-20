@@ -8,13 +8,14 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "./UserContext";
 import { toast } from "sonner";
 import DynamicBadge from "./DynamicBadge";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const menuRef = useRef(null);
+  const pathName = usePathname();
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -39,16 +40,19 @@ export default function NavBar() {
     toast.success(response.data.message, {
       duration: 1000,
     });
+    router.push("/");
+    setIsMenuOpen(false);
   };
 
   const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
-    console.log(user);
-    if (user?.email === process.env.ADMIN_EMAIL) {
+    if (user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
       setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
     }
-  }, [user, setUser]);
+  }, [user]);
 
   return (
     <>
@@ -61,21 +65,22 @@ export default function NavBar() {
             alt=""
           />
         </div>
-
-        <div className="flex gap-1 max-sm:hidden">
-          <div className="bg-[#1f1f1f] p-4 flex cursor-pointer justify-center items-center rounded-full">
-            <GrHomeRounded className="text-white md:text-2xl  fill-current" />
+        {pathName === "/" && (
+          <div className="flex gap-1 max-sm:hidden">
+            <div className="bg-[#1f1f1f] p-4 flex cursor-pointer justify-center items-center rounded-full">
+              <GrHomeRounded className="text-white md:text-2xl  fill-current" />
+            </div>
+            <div className="bg-[#1f1f1f] p-3 rounded-full flex justify-center items-center gap-2">
+              <IoSearchOutline className="text-[#b3b3b3] text-3xl" />
+              <input
+                type="text"
+                className="bg-transparent outline-none text-white w-full px-2"
+                placeholder="What do you want to play?"
+              />
+              <LuInbox className="text-[#b3b3b3] text-3xl" />
+            </div>
           </div>
-          <div className="bg-[#1f1f1f] p-3 rounded-full flex justify-center items-center gap-2">
-            <IoSearchOutline className="text-[#b3b3b3] text-3xl" />
-            <input
-              type="text"
-              className="bg-transparent outline-none text-white w-full px-2"
-              placeholder="What do you want to play?"
-            />
-            <LuInbox className="text-[#b3b3b3] text-3xl" />
-          </div>
-        </div>
+        )}
 
         <div>
           {!user && (
@@ -96,7 +101,13 @@ export default function NavBar() {
             <div className="flex gap-1 items-center justify-center">
               {isAdmin && (
                 <div>
-                  <button className="bg-gray-200 px-3 py-1 rounded-full">
+                  <button
+                    onClick={(ev) => {
+                      ev.preventDefault();
+                      router.push("/admin");
+                    }}
+                    className="bg-gray-200 px-3 py-1 rounded-full"
+                  >
                     Admin Page
                   </button>
                 </div>

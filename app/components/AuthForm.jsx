@@ -63,7 +63,7 @@ export default function AuthForm({ mode }) {
 
   return (
     <div className="flex min-h-screen items-center relative justify-center bg-gray-900 text-white">
-      <div className="w-full max-w-md space-y-6">
+      <div className="w-full max-w-md space-y-6 mx-5">
         <button
           onClick={(ev) => {
             goBack(ev);
