@@ -56,7 +56,7 @@ export default function NavBar() {
 
   return (
     <>
-      <div className="bg-black p-3  flex justify-between items-center">
+      <div className="bg-black p-3 px-6  flex justify-between items-center relative">
         <div className="w-8 h-8 rounded-full overflow-hidden">
           {/* <img className="object-cover" src="./favicon.ico" alt="" /> */}
           <img
@@ -66,15 +66,15 @@ export default function NavBar() {
           />
         </div>
         {pathName === "/" && (
-          <div className="flex gap-1 max-sm:hidden">
-            <div className="bg-[#1f1f1f] p-4 flex cursor-pointer justify-center items-center rounded-full">
+          <div className="flex gap-1 max-sm:hidden absolute right-[40%]">
+            <div className="bg-[#1f1f1f] p-4 my-2 flex cursor-pointer justify-center items-center rounded-full">
               <GrHomeRounded className="text-white md:text-2xl  fill-current" />
             </div>
-            <div className="bg-[#1f1f1f] p-3 rounded-full flex justify-center items-center gap-2">
+            <div className="bg-[#1f1f1f] p-3 my-1 rounded-full flex justify-center items-center gap-2">
               <IoSearchOutline className="text-[#b3b3b3] text-3xl" />
               <input
                 type="text"
-                className="bg-transparent outline-none focus:outline-none text-white w-full px-2"
+                className="bg-transparent outline-none border-none active:border-none focus:outline-none text-white w-full px-2"
                 placeholder="What do you want to play?"
               />
               <LuInbox className="text-[#b3b3b3] text-3xl" />
@@ -98,7 +98,7 @@ export default function NavBar() {
           )}
 
           {user && (
-            <div className="flex gap-1 items-center justify-center">
+            <div className="flex gap-3 items-center justify-center">
               {isAdmin && (
                 <div>
                   <button
@@ -106,7 +106,7 @@ export default function NavBar() {
                       ev.preventDefault();
                       router.push("/admin");
                     }}
-                    className="bg-gray-200 px-3 py-1 rounded-full"
+                    className="bg-white font-semibold px-3 py-1 rounded-full"
                   >
                     Admin Page
                   </button>

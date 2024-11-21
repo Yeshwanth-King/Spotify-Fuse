@@ -13,11 +13,16 @@ module.exports = {
 				foreground: 'hsl(var(--foreground))',
 				spotify: {
 					green: '#1DB954',
-					black: '#121212'
+					black: '#121212',
+					spotifyDark: "#121212",
+					spotifyGreen: "#1DB954",
+					spotifyGray: "#1e1e1e",
 				},
 			}
 		}
 	},
-	plugins: [require('@tailwindcss/forms'),
-	require('tailwind-scrollbar'),],
+	plugins: [
+		require('@tailwindcss/forms'),
+		require('tailwind-scrollbar'),
+	],
 };
