@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiMusic } from "react-icons/bi";
 import axios from "axios";
 import { toast } from "sonner";
@@ -11,6 +11,21 @@ export default function AddSongForm() {
   const [songFile, setSongFile] = useState(null);
   const [songImage, setSongImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [albums, setAlbums] = useState([]);
+  const [selectedAlbum, setSelectedAlbum] = useState("");
+
+  const handleSelectChange = (e) => {
+    setSelectedAlbum(e.target.key);
+    console.log("Selected Album:", e.target.value);
+  };
+
+  useEffect(() => {
+    (async () => {
+      const response = await axios.get("/api/getAllAlbums");
+      console.log(response.data.albums);
+      setAlbums(response.data.albums);
+    })();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,6 +36,7 @@ export default function AddSongForm() {
     formData.append("artistName", artistName);
     formData.append("songFile", songFile);
     formData.append("songImage", songImage);
+    formData.append("album", selectedAlbum);
 
     try {
       const response = await axios.post("/api/upload-song", formData, {
@@ -114,6 +130,31 @@ export default function AddSongForm() {
              file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold 
              file:bg-[#282828] file:text-gray-400 hover:file:bg-[#3e3e3e] focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
         />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label htmlFor="album" className="text-gray-400 text-sm">
+          Select an Album:
+        </label>
+        <select
+          id="album"
+          value={selectedAlbum}
+          onChange={handleSelectChange}
+          className="w-full px-4 py-2 bg-[#1e1e1e] border border-[#282828] rounded-md text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
+        >
+          <option value="" disabled>
+            -- Choose an Album --
+          </option>
+          {albums.map((album) => (
+            <option
+              key={album._id}
+              className="cursor-pointer"
+              value={album.title}
+            >
+              {album.title}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Submit Button */}

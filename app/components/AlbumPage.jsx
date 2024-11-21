@@ -5,10 +5,9 @@ import { IoAlbumsOutline } from "react-icons/io5";
 import axios from "axios";
 import { toast } from "sonner";
 export default function AlbumPage() {
-  const [songName, setSongName] = useState("");
-  const [artistName, setArtistName] = useState("");
-  const [songFile, setSongFile] = useState(null);
-  const [songImage, setSongImage] = useState(null);
+  const [albumName, setAlbumName] = useState("");
+  const [artist, setArtist] = useState("");
+  const [albumImage, setAlbumImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [songs, setSongs] = useState([]);
   const [songsAdded, setSongsAdded] = useState([]);
@@ -26,21 +25,19 @@ export default function AlbumPage() {
     setLoading(true);
 
     const formData = new FormData();
-    formData.append("songName", songName);
-    formData.append("artistName", artistName);
-    formData.append("songFile", songFile);
-    formData.append("songImage", songImage);
+    formData.append("albumName", albumName);
+    formData.append("artistName", artist);
+    formData.append("albumIamge", albumImage);
 
     try {
-      const response = await axios.post("/api/upload-song", formData, {
+      const response = await axios.post("/api/upload-album", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response.data);
       toast.success("Song added successfully", { duration: 1000 });
-      setSongName("");
-      setArtistName("");
-      setSongFile(null);
-      setSongImage(null);
+      setAlbumName("");
+      setArtist("");
+      setAlbumImage(null);
     } catch (error) {
       console.error("Error uploading song:", error);
       toast.error("Failed to add the song.", { duration: 1000 });
@@ -72,8 +69,8 @@ export default function AlbumPage() {
             <input
               type="text"
               id="songName"
-              value={songName}
-              onChange={(e) => setSongName(e.target.value)}
+              value={albumName}
+              onChange={(e) => setAlbumName(e.target.value)}
               required
               className="w-full px-4 py-2 bg-[#1e1e1e] border border-[#282828] rounded-lg focus:ring-2 focus:ring-[#1DB954] text-sm"
             />
@@ -90,48 +87,12 @@ export default function AlbumPage() {
             <input
               type="text"
               id="artistName"
-              value={artistName}
-              onChange={(e) => setArtistName(e.target.value)}
+              value={artist}
+              onChange={(e) => setArtist(e.target.value)}
               required
               className="w-full px-4 py-2 bg-[#1e1e1e] border border-[#282828] rounded-lg focus:ring-2 focus:ring-[#1DB954] text-sm"
             />
           </div>
-
-          {/* Song File */}
-          {/* <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Songs</label>
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                className="w-full px-4 py-2 bg-[#1e1e1e] border border-[#282828] rounded-lg focus:ring-2 focus:ring-[#1DB954] text-sm"
-              />
-              <button
-                type="button"
-                className="bg-green-500 px-4 py-2 rounded-md text-white font-medium hover:bg-green-600"
-              >
-                Add
-              </button>
-            </div>
-            <ul className="mt-3 space-y-1">
-              {songs?.map((song, index) => (
-                <li
-                  key={index}
-                  className="text-sm text-gray-400 flex items-center justify-between"
-                >
-                  {index + 1}. {song.title}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setSongs((prev) => prev.filter((_, i) => i !== index))
-                    }
-                    className="text-red-500 hover:underline"
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div> */}
 
           {/* Song Image */}
           <div>
@@ -145,7 +106,7 @@ export default function AlbumPage() {
               type="file"
               id="songImage"
               accept="image/*"
-              onChange={(e) => setSongImage(e.target.files[0])}
+              onChange={(e) => setAlbumImage(e.target.files[0])}
               required
               className="w-full px-4 py-2 bg-[#121212] border border-[#282828] rounded-md text-sm text-gray-300 
              file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold 

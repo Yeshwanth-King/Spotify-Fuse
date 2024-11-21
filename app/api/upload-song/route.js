@@ -14,7 +14,9 @@ export async function POST(req) {
     const artistName = formData.get("artistName");
     const songFile = formData.get("songFile"); // File object
     const songImage = formData.get("songImage");
+    const album = formData.get("album");
     const uniqueName = `${songName}-${artistName}-${Date.now()}`;
+    console.log(album)
 
     const songBuffer = await songFile.arrayBuffer();
     const imageBuffer = await songImage.arrayBuffer();
@@ -34,10 +36,13 @@ export async function POST(req) {
         artist: artistName,
         imageUrl: ImageUpload.secure_url,
         song: songUploaded.secure_url,
+        album: album._id,
     });
+    const populated = await Song.findById(song._id).populate("album")
 
-    console.log("Song created:", song);
 
-    return NextResponse.json({ song });
+    console.log("Song created:", populated);
+
+    return NextResponse.json({ populated });
 
 }

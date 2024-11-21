@@ -1,12 +1,15 @@
+"use client";
 import Image from "next/image";
 import AddSongForm from "../components/AddSongForm";
 import AlbumPage from "../components/AlbumPage";
-import CreateAlbumPage from "../components/CreateAlbumPage";
 import NavBar from "../components/NavBar";
-import Sidebar from "../components/SideBar";
 import AdminCards from "../components/AdminCards";
+import { useContext } from "react";
+import { UserContext } from "../components/UserContext";
 
 export default function Admin() {
+  const { user, setUser } = useContext(UserContext);
+
   return (
     <>
       <div className="bg-black min-h-screen">
@@ -35,6 +38,8 @@ export default function Admin() {
               <div className="sm:hidden"></div>
             </div>
             <AdminCards />
+            <AddSongForm />
+            <AlbumPage />
           </div>
         </div>
       </div>
