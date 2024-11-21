@@ -7,7 +7,7 @@ import { TfiMenuAlt } from "react-icons/tfi";
 
 export default function Sidebar() {
   return (
-    <div className="bg-[#121212] text-white w-[25%] min-h-[89vh] rounded-2xl ml-3 p-1 flex flex-col">
+    <div className="bg-[#121212] max-sm:hidden text-white w-[25%] min-h-[89vh] rounded-2xl ml-3 p-1 flex flex-col">
       {/* Spotify Logo */}
       {/* Your Library Header */}
       <div className="mb-4 px-6 pt-6">
