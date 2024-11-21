@@ -86,13 +86,16 @@ export default function AddSongForm() {
         <label htmlFor="songFile" className="block mb-1 text-sm font-medium">
           Song File (MP3)
         </label>
+
         <input
           type="file"
           id="songFile"
           accept="audio/*"
           onChange={(e) => setSongFile(e.target.files[0])}
           required
-          className="w-full px-4 py-2 bg-[#1e1e1e] border border-[#282828] rounded-lg text-sm"
+          className="w-full px-4 py-2 bg-[#121212] border border-[#282828] rounded-md text-sm text-gray-300 
+             file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold 
+             file:bg-[#282828] file:text-gray-400 hover:file:bg-[#3e3e3e] focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
         />
       </div>
 
@@ -107,7 +110,9 @@ export default function AddSongForm() {
           accept="image/*"
           onChange={(e) => setSongImage(e.target.files[0])}
           required
-          className="w-full px-4 py-2 bg-[#1e1e1e] border border-[#282828] rounded-lg text-sm"
+          className="w-full px-4 py-2 bg-[#121212] border border-[#282828] rounded-md text-sm text-gray-300 
+             file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold 
+             file:bg-[#282828] file:text-gray-400 hover:file:bg-[#3e3e3e] focus:outline-none focus:ring-2 focus:ring-[#1DB954]"
         />
       </div>
 
