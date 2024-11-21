@@ -21,6 +21,7 @@ export async function POST(req, res) {
                 if (user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
                     response.cookies.set("isAdmin", "true", {
                         httpOnly: true,
+                        maxAge: 60 * 60 * 1,
                     })
                 }
                 return response;

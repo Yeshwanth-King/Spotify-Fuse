@@ -1,44 +1,63 @@
-import multer from "multer";
+// import cloudinary from "@/app/lib/cloudinary";
+import { Song } from "@/app/models/Song";
+import { v2 as cloudinary } from 'cloudinary'
 import { NextResponse } from "next/server";
 import path from "path";
 
-// Configure multer storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, "./public/uploads"); // Save files in the public/uploads directory
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
-    },
-});
-
-// Set up multer upload
-const upload = multer({ storage });
 
 export async function POST(req) {
-    try {
-        const form = await new Promise((resolve, reject) => {
-            const handler = upload.fields([
-                { name: "songFile", maxCount: 1 },
-                { name: "songImage", maxCount: 1 },
-            ]);
-            handler(req, null, (err) => (err ? reject(err) : resolve(req)));
-        });
 
-        const { songName, artistName } = form.body;
-        const songFile = form.files.songFile[0].filename;
-        const songImage = form.files.songImage[0].filename;
 
-        console.log({
-            songName,
-            artistName,
-            songFile,
-            songImage,
-        });
+    // Parse form data
+    const formData = await req.formData();
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+    });
 
-        return NextResponse.json({ success: true, message: "Song uploaded!" });
-    } catch (error) {
-        console.error(error);
-        return NextResponse.json({ success: false, error: "Upload failed!" });
-    }
+    // Extract fields from form data
+    const songName = formData.get("songName");
+    const artistName = formData.get("artistName");
+    const songFile = formData.get("songFile"); // File object
+    const songImage = formData.get("songImage");
+    console.log({
+        songName,
+        artistName,
+        songFile,
+        songImage,
+    });
+
+    const songBuffer = await songFile.arrayBuffer();
+    const imageBuffer = await songImage.arrayBuffer();
+
+    const songUploaded = await cloudinary.uploader.upload(`data:${songFile.type};base64,${Buffer.from(songBuffer).toString("base64")}`, {
+        resource_type: "video",
+        folder: "songs",
+        transformation: [
+            {
+                quality: "auto", // Automatically compress the audio
+                fetch_format: "mp3", // Convert to MP3 format (optional)
+                audio_codec: "mp3",   // Use MP3 codec (optional)
+                bitrate: "64k",     // Set the bitrate to 64 kbps (optional)
+            }
+        ]
+    })
+
+    const ImageUpload = await cloudinary.uploader.upload(`data:${songImage.type};base64,${Buffer.from(imageBuffer).toString("base64")}`, {
+        folder: "songImages",
+    })
+    console.log(songUploaded, ImageUpload);
+
+    const song = await Song.create({
+        title: songName,
+        artist: artistName,
+        imageUrl: ImageUpload.secure_url,
+        song: songUploaded.secure_url,
+    });
+
+    console.log("Song created:", song);
+
+    return NextResponse.json({ song });
+
 }
