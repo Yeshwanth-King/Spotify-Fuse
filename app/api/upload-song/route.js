@@ -9,6 +9,8 @@ export async function POST(req) {
 
     // Parse form data
     const formData = await req.formData();
+    await connectDB();
+
 
     // Extract fields from form data
     const songName = formData.get("songName");

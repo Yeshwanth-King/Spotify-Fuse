@@ -3,14 +3,20 @@ import { BsMusicNoteList } from "react-icons/bs";
 import { ImBooks } from "react-icons/im";
 import { HiOutlinePaintBrush } from "react-icons/hi2";
 import { FaUsers } from "react-icons/fa";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function AdminCards() {
+  const [songNum, setSongNum] = useState(0);
+  const [albumNum, setAlbumNum] = useState(0);
+  const [usersNum, setUsersNum] = useState(0);
   useEffect(() => {
     (async () => {
       const response = await axios.get("/api/getAdminInfo");
       console.log(response.data);
+      setAlbumNum(response.data.albums);
+      setSongNum(response.data.songs);
+      setUsersNum(response.data.users);
     })();
   }, []);
 
@@ -26,7 +32,7 @@ export default function AdminCards() {
           {/* Info */}
           <div className="flex flex-col">
             <span className="text-sm text-gray-400">Total Songs</span>
-            <span className="text-2xl font-bold text-white">12</span>
+            <span className="text-2xl font-bold text-white">{songNum}</span>
           </div>
         </div>
         <div className="flex items-center gap-3 w-64 p-4 bg-[#1e1e1e] rounded-lg shadow-md border border-[#282828]">
@@ -37,8 +43,8 @@ export default function AdminCards() {
 
           {/* Info */}
           <div className="flex flex-col">
-            <span className="text-sm text-gray-400">Total Songs</span>
-            <span className="text-2xl font-bold text-white">12</span>
+            <span className="text-sm text-gray-400">Total Albums</span>
+            <span className="text-2xl font-bold text-white">{albumNum}</span>
           </div>
         </div>
         <div className="flex items-center gap-3 w-64 p-4 bg-[#1e1e1e] rounded-lg shadow-md border border-[#282828]">
@@ -49,7 +55,7 @@ export default function AdminCards() {
 
           {/* Info */}
           <div className="flex flex-col">
-            <span className="text-sm text-gray-400">Total Songs</span>
+            <span className="text-sm text-gray-400">Total Artist</span>
             <span className="text-2xl font-bold text-white">12</span>
           </div>
         </div>
@@ -61,8 +67,8 @@ export default function AdminCards() {
 
           {/* Info */}
           <div className="flex flex-col">
-            <span className="text-sm text-gray-400">Total Songs</span>
-            <span className="text-2xl font-bold text-white">12</span>
+            <span className="text-sm text-gray-400">Total Users</span>
+            <span className="text-2xl font-bold text-white">{usersNum}</span>
           </div>
         </div>
       </div>

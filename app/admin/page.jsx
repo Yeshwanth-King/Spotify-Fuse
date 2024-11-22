@@ -15,7 +15,7 @@ export default function Admin() {
       <div className="bg-black min-h-screen">
         <NavBar />
         <div className="flex gap-1">
-          <div className="bg-[#121212] p-4 w-full mx-2 rounded-2xl flex flex-col justify-center items-center gap-2">
+          <div className="bg-[#121212] p-4 w-full mx-2 rounded-2xl flex flex-col items-center gap-2 h-[89vh]">
             <div className="flex w-full">
               <div className="flex gap-2 items-center p-3">
                 <div>
@@ -38,8 +38,6 @@ export default function Admin() {
               <div className="sm:hidden"></div>
             </div>
             <AdminCards />
-            <AddSongForm />
-            <AlbumPage />
           </div>
         </div>
       </div>

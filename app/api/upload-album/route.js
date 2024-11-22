@@ -1,4 +1,5 @@
 import cloudinary from "@/app/lib/cloudinary";
+import { connectDB } from "@/app/lib/connectDB";
 import { Album } from "@/app/models/Album";
 import { NextResponse } from "next/server";
 
@@ -7,6 +8,7 @@ export async function POST(req) {
 
 
     const formData = await req.formData();
+    await connectDB();
 
     const albumName = formData.get("albumName");
     const artistName = formData.get("artistName");
