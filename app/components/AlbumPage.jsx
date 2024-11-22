@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { IoAlbumsOutline } from "react-icons/io5";
 import axios from "axios";
 import { toast } from "sonner";
-export default function AlbumPage() {
+import { RxCross2 } from "react-icons/rx";
+export default function AlbumPage({ setAddSong }) {
   const [albumName, setAlbumName] = useState("");
   const [artist, setArtist] = useState("");
   const [albumImage, setAlbumImage] = useState(null);
@@ -49,8 +50,16 @@ export default function AlbumPage() {
       <div>
         <form
           onSubmit={handleSubmit}
-          className="max-w-lg mx-auto p-6 rounded-lg bg-[#121212] shadow-md text-white space-y-6"
+          className="max-w-lg relative mx-auto p-6 rounded-lg bg-[#121212] shadow-md text-white space-y-6"
         >
+          <div className="absolute right-4 ">
+            <RxCross2
+              onClick={() => {
+                setAddSong(false);
+              }}
+              className="text-2xl cursor-pointer"
+            />
+          </div>
           <div className="flex gap-2 justify-center items-center">
             <IoAlbumsOutline className="text-3xl text-[#1DB954]" />
             <h2 className="text-2xl font-semibold text-white text-center">

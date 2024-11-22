@@ -54,12 +54,6 @@ export default function AuthForm({ mode }) {
     ev.preventDefault();
     router.push("/");
   };
-  useEffect(() => {
-    (async () => {
-      const res = await axios.get("/api/connectDB");
-      console.log(res.data);
-    })();
-  }, []);
 
   return (
     <div className="flex min-h-screen items-center relative justify-center bg-gray-900 text-white">

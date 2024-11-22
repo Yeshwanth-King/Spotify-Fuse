@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { BiMusic } from "react-icons/bi";
 import axios from "axios";
 import { toast } from "sonner";
+import { RxCross2 } from "react-icons/rx";
 
-export default function AddSongForm() {
+export default function AddSongForm({ setAddSong }) {
   const [songName, setSongName] = useState("");
   const [artistName, setArtistName] = useState("");
   const [songFile, setSongFile] = useState(null);
@@ -65,8 +66,16 @@ export default function AddSongForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-lg mx-auto p-6 rounded-lg bg-[#121212] shadow-md text-white space-y-6"
+      className="max-w-lg mx-auto p-6 rounded-lg relative bg-[#121212] shadow-md text-white space-y-6"
     >
+      <div className="absolute right-4 ">
+        <RxCross2
+          onClick={() => {
+            setAddSong(false);
+          }}
+          className="text-2xl cursor-pointer"
+        />
+      </div>
       <div className="flex gap-2 justify-center items-center">
         <BiMusic className="text-3xl text-[#1DB954]" />
         <h2 className="text-2xl font-semibold text-white text-center">
