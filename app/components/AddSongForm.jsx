@@ -13,9 +13,13 @@ export default function AddSongForm() {
   const [loading, setLoading] = useState(false);
   const [albums, setAlbums] = useState([]);
   const [selectedAlbum, setSelectedAlbum] = useState("");
+  const [seletedAlbumId, setSeletedAlbumId] = useState("");
 
   const handleSelectChange = (e) => {
-    setSelectedAlbum(e.target.key);
+    setSeletedAlbumId(
+      albums?.filter((item) => item.title === e.target.value)[0]._id
+    );
+    setSelectedAlbum(e.target.value);
     console.log("Selected Album:", e.target.value);
   };
 
@@ -29,6 +33,7 @@ export default function AddSongForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(selectedAlbum);
     setLoading(true);
 
     const formData = new FormData();
@@ -36,14 +41,16 @@ export default function AddSongForm() {
     formData.append("artistName", artistName);
     formData.append("songFile", songFile);
     formData.append("songImage", songImage);
-    formData.append("album", selectedAlbum);
+    formData.append("album", seletedAlbumId);
 
     try {
       const response = await axios.post("/api/upload-song", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response.data);
-      toast.success("Song added successfully", { duration: 1000 });
+      toast.success(`${response.data.song.title} added successfully`, {
+        duration: 1000,
+      });
       setSongName("");
       setArtistName("");
       setSongFile(null);

@@ -1,4 +1,5 @@
 import cloudinary from "@/app/lib/cloudinary";
+import { Album } from "@/app/models/Album";
 import { Song } from "@/app/models/Song";
 import { NextResponse } from "next/server";
 
@@ -36,13 +37,20 @@ export async function POST(req) {
         artist: artistName,
         imageUrl: ImageUpload.secure_url,
         song: songUploaded.secure_url,
-        album: album._id,
+        album: album,
     });
-    const populated = await Song.findById(song._id).populate("album")
+
+    if (album) {
+        const albumUpdate = await Album.findByIdAndUpdate(album, { $push: { songs: song._id } }, { new: true });
+        console.log(albumUpdate);
+    }
 
 
-    console.log("Song created:", populated);
 
-    return NextResponse.json({ populated });
+
+
+
+
+    return NextResponse.json({ song });
 
 }
