@@ -3,8 +3,8 @@ import { User } from '@/app/models/User';
 import { NextResponse } from 'next/server';
 
 export async function POST(req) {
+    const data = await req.json();
     try {
-        const data = await req.json();
         console.log(data)
         await connectDB();
         const alreadyUser = await User.find({ email: data.email })

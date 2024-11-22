@@ -7,11 +7,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(req) {
 
-
     // Parse form data
     const formData = await req.formData();
     await connectDB();
-
 
     // Extract fields from form data
     const songName = formData.get("songName");
@@ -47,12 +45,6 @@ export async function POST(req) {
         const albumUpdate = await Album.findByIdAndUpdate(album, { $push: { songs: song._id } }, { new: true });
         console.log(albumUpdate);
     }
-
-
-
-
-
-
 
     return NextResponse.json({ song });
 
