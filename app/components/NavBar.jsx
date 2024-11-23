@@ -57,14 +57,14 @@ export default function NavBar() {
   return (
     <>
       <div className="bg-black p-3 px-6  flex justify-between items-center relative">
-        <div className="w-8 h-8 rounded-full overflow-hidden">
+        <Link href={"/"} className="w-8 h-8 rounded-full overflow-hidden">
           {/* <img className="object-cover" src="./favicon.ico" alt="" /> */}
           <img
             className="object-cover w-full h-full bg-white"
             src="./images/logo.png"
             alt=""
           />
-        </div>
+        </Link>
         {pathName === "/" && (
           <div className="flex gap-1 max-sm:hidden absolute right-[40%]">
             <div className="bg-[#1f1f1f] p-4 my-2 flex cursor-pointer justify-center items-center rounded-full">

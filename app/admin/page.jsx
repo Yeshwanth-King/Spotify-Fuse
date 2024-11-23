@@ -32,10 +32,10 @@ export default function Admin() {
 
   return (
     <>
-      <div className="bg-black min-h-screen relative">
+      <div className="bg-black min-h-screen ">
         <NavBar />
-        <div className="flex gap-1 ">
-          <div className=" bg-gradient-to-b from-zinc-900 via-zinc-900 to-black p-4 w-full mx-2 rounded-2xl flex flex-col items-center gap-2 h-[89vh]">
+        <div className="flex gap-1 relative">
+          <div className=" bg-gradient-to-b from-zinc-900 via-zinc-900 to-black p-4 w-full mx-1  rounded-2xl flex flex-col items-center gap-2 min-h-[89vh]">
             <div className="flex w-full">
               <div className="flex gap-2 items-center p-3">
                 <div>
