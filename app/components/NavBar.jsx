@@ -66,7 +66,7 @@ export default function NavBar() {
           />
         </Link>
         {pathName === "/" && (
-          <div className="flex gap-1 max-sm:hidden absolute right-[40%]">
+          <div className="gap-1 lg:flex hidden absolute right-[40%]">
             <div className="bg-[#1f1f1f] p-4 my-2 flex cursor-pointer justify-center items-center rounded-full">
               <GrHomeRounded className="text-white md:text-2xl  fill-current" />
             </div>
