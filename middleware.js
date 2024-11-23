@@ -17,11 +17,18 @@ export function middleware(request) {
             return NextResponse.rewrite(url);
         }
     }
+    if (url.pathname === ("/api/upload-song") || url.pathname.includes("/api/upload-album") || url.pathname === "/api/getAdminInfo") {
+        if (!isAdmin || isAdmin.value !== 'true') { // Adjust this check based on your logic
+            url.pathname = '/403'; // Redirect to a forbidden page
+            return NextResponse.rewrite(url);
+        }
+
+    }
     return NextResponse.next();
 
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-    matcher: ['/signin', '/signup', '/admin/:path*'],
+    matcher: ['/signin', '/signup', '/admin/:path*', '/api/:path*'],
 }
