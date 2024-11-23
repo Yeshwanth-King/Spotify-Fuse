@@ -5,6 +5,7 @@ import { IoAlbumsOutline } from "react-icons/io5";
 import axios from "axios";
 import { toast } from "sonner";
 import { RxCross2 } from "react-icons/rx";
+import { useRouter } from "next/navigation";
 export default function AlbumPage({ setAddSong }) {
   const [albumName, setAlbumName] = useState("");
   const [artist, setArtist] = useState("");
@@ -12,7 +13,7 @@ export default function AlbumPage({ setAddSong }) {
   const [loading, setLoading] = useState(false);
   const [songs, setSongs] = useState([]);
   const [songsAdded, setSongsAdded] = useState([]);
-
+  const router = useRouter();
   useEffect(() => {
     (async () => {
       const response = await axios.get("/api/getAllSongs");
@@ -35,10 +36,14 @@ export default function AlbumPage({ setAddSong }) {
         headers: { "Content-Type": "multipart/form-data" },
       });
       console.log(response.data);
-      toast.success("Song added successfully", { duration: 1000 });
+      toast.success(`${response.data.album.title} added successfully`, {
+        duration: 1000,
+      });
       setAlbumName("");
       setArtist("");
       setAlbumImage(null);
+      setAddSong(false);
+      router.refresh();
     } catch (error) {
       console.error("Error uploading song:", error);
       toast.error("Failed to add the song.", { duration: 1000 });

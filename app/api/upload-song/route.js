@@ -18,7 +18,6 @@ export async function POST(req) {
     const songImage = formData.get("songImage");
     const album = formData.get("album");
     const uniqueName = `${songName}-${artistName}-${Date.now()}`;
-    console.log(album)
 
     const songBuffer = await songFile.arrayBuffer();
     const imageBuffer = await songImage.arrayBuffer();

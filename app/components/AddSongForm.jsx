@@ -5,6 +5,7 @@ import { BiMusic } from "react-icons/bi";
 import axios from "axios";
 import { toast } from "sonner";
 import { RxCross2 } from "react-icons/rx";
+import { useRouter } from "next/navigation";
 
 export default function AddSongForm({ setAddSong }) {
   const [songName, setSongName] = useState("");
@@ -15,7 +16,7 @@ export default function AddSongForm({ setAddSong }) {
   const [albums, setAlbums] = useState([]);
   const [selectedAlbum, setSelectedAlbum] = useState("");
   const [seletedAlbumId, setSeletedAlbumId] = useState("");
-
+  const router = useRouter();
   const handleSelectChange = (e) => {
     setSeletedAlbumId(
       albums?.filter((item) => item.title === e.target.value)[0]._id
@@ -56,6 +57,8 @@ export default function AddSongForm({ setAddSong }) {
       setArtistName("");
       setSongFile(null);
       setSongImage(null);
+      setAddSong(false);
+      router.refresh();
     } catch (error) {
       console.error("Error uploading song:", error);
       toast.error("Failed to add the song.", { duration: 1000 });

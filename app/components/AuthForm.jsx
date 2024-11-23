@@ -16,9 +16,11 @@ export default function AuthForm({ mode }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setconfirmPassword] = useState("");
   const { user, setUser } = useContext(UserContext);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     // Replace with API integration
     if (mode === "Sign Up") {
@@ -44,6 +46,7 @@ export default function AuthForm({ mode }) {
           duration: 1000,
         });
         router.push("/");
+        setLoading(false);
       }
     } else {
       console.log("Error: " + response.data);
@@ -132,7 +135,10 @@ export default function AuthForm({ mode }) {
           )}
           <button
             type="submit"
-            className="w-full rounded-md bg-green-600 py-2 text-center font-medium hover:bg-green-500"
+            className={
+              "w-full rounded-md bg-green-600 py-2 text-center font-medium hover:bg-green-500 " +
+              (loading ? "cursor-not-allowed" : "")
+            }
           >
             {mode}
           </button>
