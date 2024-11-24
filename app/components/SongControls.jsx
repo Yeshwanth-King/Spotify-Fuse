@@ -9,7 +9,7 @@ import {
   MdSkipPrevious,
 } from "react-icons/md";
 
-export default function SongControls({ song }) {
+export default function SongControls({ song, onNext, onPrev }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -26,21 +26,28 @@ export default function SongControls({ song }) {
   useEffect(() => {
     if (!audioRef.current) {
       audioRef.current = new Audio(song?.song);
+    } else {
+      audioRef.current.src = song?.song; // Update the audio source for the new song
+    }
+    audioRef.current = new Audio(song?.song);
 
-      audioRef.current.onloadedmetadata = () => {
-        setDuration(audioRef.current.duration);
-        setProgress(
-          (audioRef.current.currentTime / audioRef.current.duration) * 100
-        );
-      };
+    audioRef.current.onloadedmetadata = () => {
+      setDuration(audioRef.current.duration);
+      setProgress(
+        (audioRef.current.currentTime / audioRef.current.duration) * 100
+      );
+    };
 
-      audioRef.current.ontimeupdate = () => {
-        setCurrentTime(audioRef.current.currentTime);
-        const updatedProgress =
-          (audioRef.current.currentTime / audioRef.current.duration) * 100;
+    audioRef.current.ontimeupdate = () => {
+      setCurrentTime(audioRef.current.currentTime);
+      const updatedProgress =
+        (audioRef.current.currentTime / audioRef.current.duration) * 100;
 
-        setProgress(updatedProgress);
-      };
+      setProgress(updatedProgress);
+    };
+
+    if (isPlaying) {
+      audioRef.current.play(); // Auto-play the new song
     }
 
     return () => {
@@ -49,7 +56,7 @@ export default function SongControls({ song }) {
         audioRef.current = null;
       }
     };
-  }, [song?.song]);
+  }, [song]);
 
   const handlePlayPause = () => {
     if (audioRef.current) {
@@ -67,20 +74,15 @@ export default function SongControls({ song }) {
     audio.currentTime = 0;
     setCurrentTime(0);
     setIsPlaying(true);
+    onPrev();
   };
 
   const handleNext = () => {
     const audio = audioRef.current;
-    audio.currentTime = duration;
+    audio.currentTime = 0;
     setCurrentTime(duration);
     setIsPlaying(true);
-  };
-
-  const handleProgressChange = (e) => {
-    const newProgress = e.target.value;
-    setProgress(newProgress);
-    const audio = audioRef.current;
-    audio.currentTime = (newProgress / 100) * duration;
+    onNext();
   };
 
   const handleProgressClick = (e) => {

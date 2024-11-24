@@ -8,6 +8,19 @@ import SongControls from "./components/SongControls";
 
 export default function Home() {
   const [songs, setSongs] = useState([]);
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
+
+  const handleNextSong = () => {
+    setCurrentSongIndex(
+      (prevIndex) => (prevIndex < songs.length - 1 ? prevIndex + 1 : 0) // Loop back to the first song
+    );
+  };
+
+  const handlePrevSong = () => {
+    setCurrentSongIndex(
+      (prevIndex) => (prevIndex > 0 ? prevIndex - 1 : songs.length - 1) // Loop back to the last song
+    );
+  };
   useEffect(() => {
     (async () => {
       const response = await axios.get("/api/getAllSongs");
@@ -34,10 +47,14 @@ export default function Home() {
         </div>
         <div className="bg-black absolute bottom-0 z-50 p-2 w-full flex justify-between items-center ">
           <div className="w-[33%]">
-            <CurrentSong song={songs[2]} />
+            <CurrentSong song={songs[currentSongIndex]} />
           </div>
           <div className="w-[34%]">
-            <SongControls song={songs[2]} />
+            <SongControls
+              song={songs[currentSongIndex]}
+              onNext={handleNextSong}
+              onPrev={handlePrevSong}
+            />
           </div>
           <div className="w-[33%]"></div>
         </div>
