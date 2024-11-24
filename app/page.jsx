@@ -34,10 +34,10 @@ export default function Home() {
         </div>
         <div className="bg-black absolute bottom-0 z-50 p-2 w-full flex justify-between items-center ">
           <div className="w-[33%]">
-            <CurrentSong song={songs[4]} />
+            <CurrentSong song={songs[2]} />
           </div>
           <div className="w-[34%]">
-            <SongControls song={songs[4]} />
+            <SongControls song={songs[2]} />
           </div>
           <div className="w-[33%]"></div>
         </div>
