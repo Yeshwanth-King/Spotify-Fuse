@@ -71,10 +71,16 @@ export default function SongControls({ song, onNext, onPrev }) {
 
   const handlePrev = () => {
     const audio = audioRef.current;
-    audio.currentTime = 0;
-    setCurrentTime(0);
-    setIsPlaying(true);
-    onPrev();
+    if (audio.currentTime < 5) {
+      audio.currentTime = 0;
+      setCurrentTime(0);
+      setIsPlaying(true);
+      onPrev();
+    } else {
+      audio.currentTime = 0;
+      setCurrentTime(0);
+      setIsPlaying(true);
+    }
   };
 
   const handleNext = () => {
