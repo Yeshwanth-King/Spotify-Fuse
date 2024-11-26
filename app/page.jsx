@@ -5,9 +5,11 @@ import Sidebar from "./components/SideBar";
 import axios from "axios";
 import CurrentSong from "./components/CurrentSong";
 import SongControls from "./components/SongControls";
+import MainContent from "./components/MainContent";
 
 export default function Home() {
   const [songs, setSongs] = useState([]);
+  const [albums, setAlbums] = useState([]);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
   const handleNextSong = () => {
@@ -25,6 +27,8 @@ export default function Home() {
     (async () => {
       const response = await axios.get("/api/getAllSongs");
       setSongs(response.data.songs);
+      const response2 = await axios.get("/api/getAllAlbums");
+      setAlbums(response2.data.albums);
     })();
   }, []);
 
@@ -40,8 +44,8 @@ export default function Home() {
             <Sidebar />
           </div>
           <div className="lg:w-[75%] w-full text-white px-4">
-            <div className=" bg-[#121212] p-4 w-full rounded-2xl flex flex-col items-center gap-2 min-h-[89vh]">
-              Main Content
+            <div className=" bg-[#121212] p-4 w-full rounded-2xl gap-2 min-h-[89vh]">
+              <MainContent songs={songs} albums={albums} />
             </div>
           </div>
         </div>

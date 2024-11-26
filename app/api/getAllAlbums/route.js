@@ -7,3 +7,9 @@ export async function GET(req, res) {
     const albums = await Album.find().sort({ createdAt: -1 });
     return NextResponse.json({ albums })
 }
+export async function PUT(req, res) {
+    await connectDB();
+    const { id } = await req.json();
+    const album = await Album.findById(id)
+    return NextResponse.json({ album })
+}
