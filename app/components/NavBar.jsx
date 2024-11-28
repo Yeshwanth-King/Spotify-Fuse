@@ -127,7 +127,7 @@ export default function NavBar() {
           {isMenuOpen && (
             <div
               ref={menuRef}
-              className="absolute right-8 rounded-2xl mt-2 w-48 bg-[#282828] overflow-hidden text-white shadow-lg"
+              className="absolute right-8 rounded-2xl mt-2 w-48 bg-[#282828] z-50 overflow-hidden text-white shadow-lg"
             >
               {!user && (
                 <>

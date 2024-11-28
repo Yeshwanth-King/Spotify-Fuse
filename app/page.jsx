@@ -6,11 +6,18 @@ import axios from "axios";
 import CurrentSong from "./components/CurrentSong";
 import SongControls from "./components/SongControls";
 import MainContent from "./components/MainContent";
+import { FastAverageColor } from "fast-average-color";
+import SmallSong from "./components/SmallSong";
+import SongModal from "./components/SongModal";
 
 export default function Home() {
   const [songs, setSongs] = useState([]);
   const [albums, setAlbums] = useState([]);
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
+  const [background, setBackground] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
+
+  const fac = new FastAverageColor();
 
   const handleNextSong = () => {
     setCurrentSongIndex(
@@ -23,6 +30,7 @@ export default function Home() {
       (prevIndex) => (prevIndex > 0 ? prevIndex - 1 : songs.length - 1) // Loop back to the last song
     );
   };
+
   useEffect(() => {
     (async () => {
       const response = await axios.get("/api/getAllSongs");
@@ -32,12 +40,44 @@ export default function Home() {
     })();
   }, []);
 
+  useEffect(() => {
+    if (!songs[currentSongIndex]?.imageUrl) return; // Guard clause to check if image exists
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.src = songs[currentSongIndex]?.imageUrl;
+
+    img.onload = () => {
+      fac
+        .getColorAsync(img)
+        .then((color) => {
+          setBackground(color.hex);
+        })
+        .catch((error) => {
+          console.error("Error calculating average color:", error);
+        });
+    };
+
+    img.onerror = () => {
+      console.error("Image loading failed for FastAverageColor.");
+    };
+
+    return () => fac.destroy();
+  }, [currentSongIndex, songs]);
+
+  const openModal = (song) => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
   return (
     <>
       <div className="bg-black min-h-screen relative">
         {/* Navigation Bar */}
         <NavBar />
-
         {/* Sidebar and Content */}
         <div className="flex">
           <div className="lg:w-[25%]">
@@ -49,7 +89,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="bg-black absolute bottom-0 z-50 p-2 w-full flex justify-between items-center ">
+        <div className="bg-black absolute bottom-0 z-50 p-2 w-full flex justify-between items-center max-sm:hidden">
           <div className="w-[33%]">
             <CurrentSong song={songs[currentSongIndex]} />
           </div>
@@ -58,10 +98,32 @@ export default function Home() {
               song={songs[currentSongIndex]}
               onNext={handleNextSong}
               onPrev={handlePrevSong}
+              vol={true}
             />
           </div>
         </div>
+        <div className="absolute bottom-0 z-50 p-2 block w-full bg-transparent sm:hidden">
+          <div
+            className={"flex items-center rounded-lg "}
+            style={{ backgroundColor: background }}
+          >
+            {songs.length > 0 && (
+              <SmallSong song={songs[currentSongIndex]} openModal={openModal} />
+            )}
+          </div>
+        </div>
       </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <SongModal
+          background={background}
+          song={songs[currentSongIndex]}
+          closeModal={closeModal}
+          onNext={handleNextSong}
+          onPrev={handlePrevSong}
+        />
+      )}
     </>
   );
 }

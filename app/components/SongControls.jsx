@@ -8,7 +8,7 @@ import {
   MdSkipPrevious,
 } from "react-icons/md";
 
-export default function SongControls({ song, onNext, onPrev }) {
+export default function SongControls({ song, onNext, onPrev, vol }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -20,6 +20,7 @@ export default function SongControls({ song, onNext, onPrev }) {
   const volProgressBarRef = useRef(null); // Ref for the progress bar container
   const isDragging = useRef(false);
 
+  const finalVolume = muted ? 0 : volume ** 2;
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -27,73 +28,74 @@ export default function SongControls({ song, onNext, onPrev }) {
   };
 
   useEffect(() => {
+    if (!song?.song) return;
+
     if (!audioRef.current) {
-      audioRef.current = new Audio(song?.song);
+      audioRef.current = new Audio(song.song);
     } else {
-      audioRef.current.src = song?.song; // Update the audio source for the new song
+      audioRef.current.src = song.song; // Update the source
     }
-    audioRef.current = new Audio(song?.song);
+
     const audio = audioRef.current;
-    audio.volume = finalVolume;
 
-    audioRef.current.onloadedmetadata = () => {
-      setDuration(audioRef.current.duration);
-      setProgress(
-        (audioRef.current.currentTime / audioRef.current.duration) * 100
-      );
+    audio.volume = finalVolume; // Set initial volume
+
+    const handleMetadataLoaded = () => {
+      setDuration(audio.duration);
+      setProgress((audio.currentTime / audio.duration) * 100);
     };
 
-    audioRef.current.ontimeupdate = () => {
-      setCurrentTime(audioRef.current.currentTime);
-      const updatedProgress =
-        (audioRef.current.currentTime / audioRef.current.duration) * 100;
-
-      setProgress(updatedProgress);
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+      setProgress((audio.currentTime / audio.duration) * 100);
     };
+
+    // Attach event listeners
+    audio.addEventListener("loadedmetadata", handleMetadataLoaded);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
 
     if (isPlaying) {
-      audioRef.current.play(); // Auto-play the new song
+      audio.play();
     }
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
+      // Cleanup listeners and pause audio
+      audio.pause();
+      audio.removeEventListener("loadedmetadata", handleMetadataLoaded);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, [song]);
+  }, [song, isPlaying, finalVolume]);
 
   const handlePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
     }
+    setIsPlaying(!isPlaying);
   };
 
   const handlePrev = () => {
-    const audio = audioRef.current;
-    if (audio.currentTime < 5) {
-      audio.currentTime = 0;
-      setCurrentTime(0);
-      setIsPlaying(true);
+    if (!audioRef.current) return;
+
+    if (audioRef.current.currentTime < 5) {
       onPrev();
     } else {
-      audio.currentTime = 0;
+      audioRef.current.currentTime = 0;
       setCurrentTime(0);
-      setIsPlaying(true);
     }
+    setIsPlaying(true);
   };
 
   const handleNext = () => {
-    const audio = audioRef.current;
-    audio.currentTime = 0;
-    setCurrentTime(duration);
-    setIsPlaying(true);
+    if (!audioRef.current) return;
+
     onNext();
+    audioRef.current.currentTime = 0;
+    setCurrentTime(0);
+    setIsPlaying(true);
   };
 
   const handleProgressClick = (e) => {
@@ -108,8 +110,6 @@ export default function SongControls({ song, onNext, onPrev }) {
       audioRef.current.currentTime = newTime;
     }
   };
-
-  const finalVolume = muted ? 0 : volume ** 2;
 
   // Update volume based on position
   const updateVolume = (clientX) => {
@@ -154,7 +154,7 @@ export default function SongControls({ song, onNext, onPrev }) {
 
   return (
     <div className=" p-2 rounded-lg flex">
-      <div className="w-1/2">
+      <div className={vol ? "w-1/2" : "w-full"}>
         {/* Controls */}
         <div className="flex items-center justify-center gap-3 mb-4">
           <button
@@ -196,46 +196,48 @@ export default function SongControls({ song, onNext, onPrev }) {
           <span className="text-gray-400 text-sm">{formatTime(duration)}</span>
         </div>
       </div>
-      <div className="w-1/2 flex">
-        <div className="flex items-center gap-3 w-11/12">
-          {muted ? (
-            <FaVolumeMute
-              onClick={toggleMute}
-              className="text-xl cursor-pointer text-gray-500 hover:text-white transition-all duration-200"
-            />
-          ) : (
-            <FaVolumeUp
-              onClick={toggleMute}
-              className="text-xl cursor-pointer text-gray-500 hover:text-white transition-all duration-200"
-            />
-          )}
-          <div
-            className="bg-[#4d4d4d] w-full p-[2px] relative mx-2 rounded-full cursor-pointer group"
-            ref={volProgressBarRef}
-            onMouseDown={handleDragStart}
-            onTouchStart={handleDragStart}
-            onMouseMove={handleDragMove}
-            onTouchMove={handleDragMove}
-            onMouseUp={handleDragEnd}
-            onMouseLeave={handleDragEnd}
-            onTouchEnd={handleDragEnd}
-          >
-            {/* Progress indicator */}
+      {vol && (
+        <div className="w-1/2 flex">
+          <div className="flex items-center gap-3 w-11/12">
+            {muted ? (
+              <FaVolumeMute
+                onClick={toggleMute}
+                className="text-xl cursor-pointer text-gray-500 hover:text-white transition-all duration-200"
+              />
+            ) : (
+              <FaVolumeUp
+                onClick={toggleMute}
+                className="text-xl cursor-pointer text-gray-500 hover:text-white transition-all duration-200"
+              />
+            )}
             <div
-              className="bg-white h-full rounded-full p-[2px] group-hover:bg-green-500 "
-              style={{ width: `${muted ? 0 : volume * 100 + 1}%` }}
+              className="bg-[#4d4d4d] w-full p-[2px] relative mx-2 rounded-full cursor-pointer group"
+              ref={volProgressBarRef}
+              onMouseDown={handleDragStart}
+              onTouchStart={handleDragStart}
+              onMouseMove={handleDragMove}
+              onTouchMove={handleDragMove}
+              onMouseUp={handleDragEnd}
+              onMouseLeave={handleDragEnd}
+              onTouchEnd={handleDragEnd}
             >
-              {/* Draggable Dot */}
+              {/* Progress indicator */}
               <div
-                className="absolute top-1 hidden group-hover:block transform translate-y-[-50%] bg-white  p-2 rounded-full cursor-pointer"
-                style={{ left: `${muted ? 0 : volume * 100}%` }}
-                onMouseDown={handleDragStart}
-                onTouchStart={handleDragStart}
-              ></div>
+                className="bg-white h-full rounded-full p-[2px] group-hover:bg-green-500 "
+                style={{ width: `${muted ? 0 : volume * 100 + 1}%` }}
+              >
+                {/* Draggable Dot */}
+                <div
+                  className="absolute top-1 hidden group-hover:block transform translate-y-[-50%] bg-white  p-2 rounded-full cursor-pointer"
+                  style={{ left: `${muted ? 0 : volume * 100}%` }}
+                  onMouseDown={handleDragStart}
+                  onTouchStart={handleDragStart}
+                ></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
