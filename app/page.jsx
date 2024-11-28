@@ -53,14 +53,13 @@ export default function Home() {
           <div className="w-[33%]">
             <CurrentSong song={songs[currentSongIndex]} />
           </div>
-          <div className="w-[34%]">
+          <div className="w-[67%]">
             <SongControls
               song={songs[currentSongIndex]}
               onNext={handleNextSong}
               onPrev={handlePrevSong}
             />
           </div>
-          <div className="w-[33%]"></div>
         </div>
       </div>
     </>

@@ -13,9 +13,9 @@ export default function Sidebar() {
   return (
     <div className="relative ">
       {/* Hamburger Menu for Mobile */}
-      <div className="lg:hidden absolute flex items-center p-4">
+      <div className="lg:hidden absolute z-50 -top-[70px] flex items-center p-4">
         <button
-          className="text-white text-2xl bg-black p-2 rounded-md hover:bg-gray-800"
+          className="text-black text-2xl bg-white p-2 rounded-md hover:bg-gray-300"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Open Navigation Menu"
         >
