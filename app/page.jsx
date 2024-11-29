@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
 import Sidebar from "./components/SideBar";
 import axios from "axios";
@@ -9,63 +9,15 @@ import MainContent from "./components/MainContent";
 import { FastAverageColor } from "fast-average-color";
 import SmallSong from "./components/SmallSong";
 import SongModal from "./components/SongModal";
+import { audioContext } from "./components/AudioPlayer";
 
 export default function Home() {
-  const [songs, setSongs] = useState([]);
-  const [albums, setAlbums] = useState([]);
-  const [currentSongIndex, setCurrentSongIndex] = useState(0);
-  const [background, setBackground] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
 
-  const fac = new FastAverageColor();
+  const { songs, albums, currentSongIndex, onNext, onPrev, background } =
+    useContext(audioContext);
 
-  const handleNextSong = () => {
-    setCurrentSongIndex(
-      (prevIndex) => (prevIndex < songs.length - 1 ? prevIndex + 1 : 0) // Loop back to the first song
-    );
-  };
-
-  const handlePrevSong = () => {
-    setCurrentSongIndex(
-      (prevIndex) => (prevIndex > 0 ? prevIndex - 1 : songs.length - 1) // Loop back to the last song
-    );
-  };
-
-  useEffect(() => {
-    (async () => {
-      const response = await axios.get("/api/getAllSongs");
-      setSongs(response.data.songs);
-      const response2 = await axios.get("/api/getAllAlbums");
-      setAlbums(response2.data.albums);
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (!songs[currentSongIndex]?.imageUrl) return; // Guard clause to check if image exists
-
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = songs[currentSongIndex]?.imageUrl;
-
-    img.onload = () => {
-      fac
-        .getColorAsync(img)
-        .then((color) => {
-          setBackground(color.hex);
-        })
-        .catch((error) => {
-          console.error("Error calculating average color:", error);
-        });
-    };
-
-    img.onerror = () => {
-      console.error("Image loading failed for FastAverageColor.");
-    };
-
-    return () => fac.destroy();
-  }, [currentSongIndex, songs]);
-
-  const openModal = (song) => {
+  const openModal = () => {
     setIsModalOpen(true); // Open the modal
   };
 
@@ -96,8 +48,8 @@ export default function Home() {
           <div className="w-[67%]">
             <SongControls
               song={songs[currentSongIndex]}
-              onNext={handleNextSong}
-              onPrev={handlePrevSong}
+              onNext={onNext}
+              onPrev={onPrev}
               vol={true}
             />
           </div>
@@ -120,8 +72,8 @@ export default function Home() {
           background={background}
           song={songs[currentSongIndex]}
           closeModal={closeModal}
-          onNext={handleNextSong}
-          onPrev={handlePrevSong}
+          onNext={onNext}
+          onPrev={onPrev}
         />
       )}
     </>

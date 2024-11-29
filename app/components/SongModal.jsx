@@ -1,9 +1,13 @@
-import React from "react";
+"use client";
+import React, { useContext } from "react";
 import SongControls from "./SongControls";
 import { FaAngleDown } from "react-icons/fa";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { audioContext } from "./AudioPlayer";
 
-const SongModal = ({ song, closeModal, background, onNext, onPrev }) => {
+const SongModal = ({ closeModal, background }) => {
+  const { songs, onPrev, onNext, currentSongIndex } = useContext(audioContext);
+
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
@@ -11,9 +15,9 @@ const SongModal = ({ song, closeModal, background, onNext, onPrev }) => {
     >
       <div
         className={
-          "bg-[#1f1f1f] p-6  w-full h-screen max-w-md text-center flex flex-col justify-between " +
-          `bg-[${background}]`
+          "p-6  w-full h-screen max-w-md text-center flex flex-col justify-between "
         }
+        style={{ backgroundColor: background }}
         onClick={(e) => e.stopPropagation()} // Prevent modal closing when clicking inside
       >
         <div className="flex justify-between items-center text-white">
@@ -21,24 +25,26 @@ const SongModal = ({ song, closeModal, background, onNext, onPrev }) => {
             onClick={closeModal}
             className="text-2xl mb-2 text-white"
           />
-          <h2 className=" text-lg mb-4">{song?.title}</h2>
+          <h2 className=" text-lg mb-4">{songs[currentSongIndex]?.title}</h2>
           <BiDotsHorizontalRounded className="text-2xl mb-2 text-white" />
         </div>
         <img
-          src={song?.imageUrl}
-          alt={song?.title}
+          src={songs[currentSongIndex]?.imageUrl}
+          alt={songs[currentSongIndex]?.title}
           className="w-full rounded-xl mb-4"
         />
         <div className="flex flex-col mb-5">
           <div className="flex flex-col items-start gap-1">
             <span className="text-white text-xl font-semibold">
-              {song?.title}
+              {songs[currentSongIndex]?.title}
             </span>
-            <p className="text-gray-400 font-medium mb-4">{song?.artist}</p>
+            <p className="text-gray-400 font-medium mb-4">
+              {songs[currentSongIndex]?.artist}
+            </p>
           </div>
           <SongControls
             onNext={onNext}
-            song={song}
+            song={songs[currentSongIndex]}
             vol={false}
             onPrev={onPrev}
           />

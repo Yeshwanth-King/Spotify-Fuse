@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { UserContextProvider } from "./components/UserContext";
+import { AudioContextProvider } from "./components/AudioPlayer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,10 +36,12 @@ export default function RootLayout({ children }) {
           `${geistSans.variable} ${geistMono.variable} antialiased` + "bg-black"
         }
       >
-        <UserContextProvider>
-          <Toaster position="top-right" richColors />
-          {children}
-        </UserContextProvider>
+        <AudioContextProvider>
+          <UserContextProvider>
+            <Toaster position="top-right" richColors />
+            {children}
+          </UserContextProvider>
+        </AudioContextProvider>
       </body>
     </html>
   );

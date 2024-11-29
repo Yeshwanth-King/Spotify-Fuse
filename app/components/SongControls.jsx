@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useContext } from "react";
 import { FaVolumeMute, FaVolumeUp } from "react-icons/fa";
 import {
   MdPause,
@@ -7,150 +7,28 @@ import {
   MdSkipNext,
   MdSkipPrevious,
 } from "react-icons/md";
+import { audioContext } from "./AudioPlayer";
 
-export default function SongControls({ song, onNext, onPrev, vol }) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const audioRef = useRef(null);
-  const progressBarRef = useRef(null);
-  const [volume, setVolume] = useState(1); // Initial volume (0 to 1)
-  const [muted, setMuted] = useState(false); // Muted state
-  const volProgressBarRef = useRef(null); // Ref for the progress bar container
-  const isDragging = useRef(false);
-
-  const finalVolume = muted ? 0 : volume ** 2;
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? "0" + secs : secs}`;
-  };
-
-  useEffect(() => {
-    if (!song?.song) return;
-
-    if (!audioRef.current) {
-      audioRef.current = new Audio(song.song);
-    } else {
-      audioRef.current.src = song.song; // Update the source
-    }
-
-    const audio = audioRef.current;
-
-    audio.volume = finalVolume; // Set initial volume
-
-    const handleMetadataLoaded = () => {
-      setDuration(audio.duration);
-      setProgress((audio.currentTime / audio.duration) * 100);
-    };
-
-    const handleTimeUpdate = () => {
-      setCurrentTime(audio.currentTime);
-      setProgress((audio.currentTime / audio.duration) * 100);
-    };
-
-    // Attach event listeners
-    audio.addEventListener("loadedmetadata", handleMetadataLoaded);
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-
-    if (isPlaying) {
-      audio.play();
-    }
-
-    return () => {
-      // Cleanup listeners and pause audio
-      audio.pause();
-      audio.removeEventListener("loadedmetadata", handleMetadataLoaded);
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-    };
-  }, [song, isPlaying, finalVolume]);
-
-  const handlePlayPause = () => {
-    if (!audioRef.current) return;
-
-    if (isPlaying) {
-      audioRef.current.pause();
-    } else {
-      audioRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-  const handlePrev = () => {
-    if (!audioRef.current) return;
-
-    if (audioRef.current.currentTime < 5) {
-      onPrev();
-    } else {
-      audioRef.current.currentTime = 0;
-      setCurrentTime(0);
-    }
-    setIsPlaying(true);
-  };
-
-  const handleNext = () => {
-    if (!audioRef.current) return;
-
-    onNext();
-    audioRef.current.currentTime = 0;
-    setCurrentTime(0);
-    setIsPlaying(true);
-  };
-
-  const handleProgressClick = (e) => {
-    if (audioRef.current && progressBarRef.current) {
-      const rect = progressBarRef.current.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const newProgress = (clickX / rect.width) * 100;
-      const newTime = (newProgress / 100) * duration;
-
-      setProgress(newProgress);
-      setCurrentTime(newTime);
-      audioRef.current.currentTime = newTime;
-    }
-  };
-
-  // Update volume based on position
-  const updateVolume = (clientX) => {
-    if (volProgressBarRef.current) {
-      const rect = volProgressBarRef.current.getBoundingClientRect();
-      const newVolume = Math.min(
-        Math.max((clientX - rect.left) / rect.width, 0),
-        1
-      );
-      setVolume(newVolume);
-    }
-  };
-
-  // Handle mouse or touch events
-  const handleDragStart = (event) => {
-    isDragging.current = true;
-    const clientX = event.clientX || event.touches[0].clientX;
-    updateVolume(clientX);
-  };
-
-  const handleDragMove = (event) => {
-    if (isDragging.current) {
-      const clientX = event.clientX || event.touches[0].clientX;
-      updateVolume(clientX);
-    }
-  };
-
-  const handleDragEnd = () => {
-    isDragging.current = false;
-  };
-
-  // Toggle mute state
-  const toggleMute = () => setMuted((prevMuted) => !prevMuted);
-
-  // Effect to update the audio element's volume
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (audio) {
-      audio.volume = muted ? 0 : finalVolume;
-    }
-  }, [finalVolume, muted]);
+export default function SongControls({ vol }) {
+  const {
+    formatTime,
+    currentTime,
+    isPlaying,
+    progressBarRef,
+    progress,
+    duration,
+    muted,
+    volProgressBarRef,
+    volume,
+    toggleMute,
+    handleDragEnd,
+    handleDragMove,
+    handleDragStart,
+    handleNext,
+    handlePlayPause,
+    handlePrev,
+    handleProgressClick,
+  } = useContext(audioContext);
 
   return (
     <div className=" p-2 rounded-lg flex">
@@ -226,7 +104,6 @@ export default function SongControls({ song, onNext, onPrev, vol }) {
                 className="bg-white h-full rounded-full p-[2px] group-hover:bg-green-500 "
                 style={{ width: `${muted ? 0 : volume * 100 + 1}%` }}
               >
-                {/* Draggable Dot */}
                 <div
                   className="absolute top-1 hidden group-hover:block transform translate-y-[-50%] bg-white  p-2 rounded-full cursor-pointer"
                   style={{ left: `${muted ? 0 : volume * 100}%` }}
