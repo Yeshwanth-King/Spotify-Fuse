@@ -66,9 +66,14 @@ export function AudioContextProvider({ children }) {
     (async () => {
       try {
         if (!songs.length > 0) {
-          const response = await axios.get("api/getAllSongs");
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/getAllSongs`
+          );
           setSongs(response.data.songs);
-          const response2 = await axios.get("/api/getAllAlbums");
+
+          const response2 = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/getAllAlbums`
+          );
           setAlbums(response2.data.albums);
           setReady(true);
         }
@@ -209,6 +214,12 @@ export function AudioContextProvider({ children }) {
       audio.volume = muted ? 0 : finalVolume;
     }
   }, [finalVolume, muted]);
+
+  useEffect(() => {
+    if (currentTime === duration) {
+      handleNext();
+    }
+  }, [currentTime]);
 
   return (
     <audioContext.Provider

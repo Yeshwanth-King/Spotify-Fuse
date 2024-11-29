@@ -35,7 +35,9 @@ export default function NavBar() {
   const router = useRouter();
   const logout = async (ev) => {
     ev.preventDefault();
-    const response = await axios.delete("/api/logout");
+    const response = await axios.delete(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/api/logout`
+    );
     setUser(null);
     toast.success(response.data.message, {
       duration: 1000,
@@ -61,7 +63,7 @@ export default function NavBar() {
           {/* <img className="object-cover" src="./favicon.ico" alt="" /> */}
           <img
             className="object-cover w-full h-full bg-white"
-            src="./images/logo.png"
+            src="https://res.cloudinary.com/dtsvmjven/image/upload/v1732852354/Logo/jlrtpso1v19n7izxhe9w.png"
             alt=""
           />
         </Link>

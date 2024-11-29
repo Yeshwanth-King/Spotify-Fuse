@@ -1,14 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { GoSidebarCollapse, GoPlus, GoArrowRight } from "react-icons/go";
 import { GiPin } from "react-icons/gi";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
+import { audioContext } from "./AudioPlayer";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { albums } = useContext(audioContext);
 
   return (
     <div className="relative ">
@@ -66,52 +68,29 @@ export default function Sidebar() {
 
           {/* Playlists */}
           <ul className="space-y-4 px-4">
-            <li className="flex items-center space-x-3 hover:bg-[#1f1f1f] p-2 cursor-pointer rounded-md">
-              <div className="w-[20%] overflow-hidden rounded-md">
-                <img
-                  src="./images/heart.png"
-                  alt="Liked Songs"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              <div>
-                <p className="text-base font-medium">Liked Songs</p>
-                <div className="text-sm flex text-gray-400">
-                  <div className="flex gap-1 items-center">
-                    <span className="text-[#1bc558]">
-                      <GiPin />
-                    </span>
-                    Playlist
-                  </div>
-                  <div>
-                    <span className="ml-1">•</span> 362 songs
-                  </div>
-                </div>
-              </div>
-            </li>
-            <li className="flex items-center space-x-3 hover:bg-[#1f1f1f] p-2 cursor-pointer rounded-md">
-              <div className="w-[20%] overflow-hidden rounded-md">
-                <img
-                  src="./images/onrepeat.png"
-                  alt="On Repeat"
-                  className="object-cover w-full h-full"
-                />
-              </div>
-              <div>
-                <p className="text-base font-medium">On Repeat</p>
-                <div className="flex text-sm text-gray-400">
-                  <div className="flex gap-1 items-center">
-                    <span className="text-[#1bc558]">
-                      <GiPin />
-                    </span>
-                    Playlist
-                  </div>
-                  <div>
-                    <span className="ml-1">•</span> Spotify
-                  </div>
-                </div>
-              </div>
-            </li>
+            {albums.length > 0 &&
+              albums.map((album) => {
+                return (
+                  <li className="flex items-center space-x-3 hover:bg-[#1f1f1f] p-2 cursor-pointer rounded-md">
+                    <div className="w-[20%] overflow-hidden rounded-md">
+                      <img
+                        src={album.imageUrl}
+                        alt="Liked Songs"
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                    <div>
+                      <p className="text-base font-medium">{album.title}</p>
+                      <div className="text-sm flex text-gray-400">
+                        <div className="flex gap-1 items-center">Album</div>
+                        <div>
+                          <span className="ml-1">•</span> {album.songs.length}
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                );
+              })}
           </ul>
         </ScrollArea>
       </div>

@@ -1,30 +1,13 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
 import NavBar from "./components/NavBar";
 import Sidebar from "./components/SideBar";
-import axios from "axios";
-import CurrentSong from "./components/CurrentSong";
-import SongControls from "./components/SongControls";
 import MainContent from "./components/MainContent";
-import { FastAverageColor } from "fast-average-color";
-import SmallSong from "./components/SmallSong";
-import SongModal from "./components/SongModal";
+import { useContext } from "react";
 import { audioContext } from "./components/AudioPlayer";
+import BottomPlayer from "./components/BottomPlayer";
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal visibility state
-
-  const { songs, albums, currentSongIndex, onNext, onPrev, background } =
-    useContext(audioContext);
-
-  const openModal = () => {
-    setIsModalOpen(true); // Open the modal
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false); // Close the modal
-  };
-
+  const { songs, albums } = useContext(audioContext);
   return (
     <>
       <div className="bg-black min-h-screen relative">
@@ -40,42 +23,9 @@ export default function Home() {
               <MainContent songs={songs} albums={albums} />
             </div>
           </div>
-        </div>
-        <div className="bg-black absolute bottom-0 z-50 p-2 w-full flex justify-between items-center max-sm:hidden">
-          <div className="w-[33%]">
-            <CurrentSong song={songs[currentSongIndex]} />
-          </div>
-          <div className="w-[67%]">
-            <SongControls
-              song={songs[currentSongIndex]}
-              onNext={onNext}
-              onPrev={onPrev}
-              vol={true}
-            />
-          </div>
-        </div>
-        <div className="absolute bottom-0 z-50 p-2 block w-full bg-transparent sm:hidden">
-          <div
-            className={"flex items-center rounded-lg "}
-            style={{ backgroundColor: background }}
-          >
-            {songs.length > 0 && (
-              <SmallSong song={songs[currentSongIndex]} openModal={openModal} />
-            )}
-          </div>
+          <BottomPlayer />
         </div>
       </div>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <SongModal
-          background={background}
-          song={songs[currentSongIndex]}
-          closeModal={closeModal}
-          onNext={onNext}
-          onPrev={onPrev}
-        />
-      )}
     </>
   );
 }
