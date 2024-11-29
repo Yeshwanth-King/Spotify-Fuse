@@ -71,7 +71,10 @@ export default function Sidebar() {
             {albums.length > 0 &&
               albums.map((album) => {
                 return (
-                  <li className="flex items-center space-x-3 hover:bg-[#1f1f1f] p-2 cursor-pointer rounded-md">
+                  <li
+                    key={album._id}
+                    className="flex items-center space-x-3 hover:bg-[#1f1f1f] p-2 cursor-pointer rounded-md"
+                  >
                     <div className="w-[20%] overflow-hidden rounded-md">
                       <img
                         src={album.imageUrl}
