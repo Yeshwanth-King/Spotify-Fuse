@@ -10,6 +10,6 @@ export async function GET(req, res) {
 export async function PUT(req, res) {
     await connectDB();
     const { id } = await req.json();
-    const album = await Album.findById(id)
+    const album = await Album.findById(id).populate("songs")
     return NextResponse.json({ album })
 }

@@ -10,7 +10,9 @@ export function UserContextProvider({ children }) {
     try {
       (async () => {
         if (!user) {
-          const response = await axios.get("api/get-profile");
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/get-profile`
+          );
           setUser(response.data.userInfo);
           setReady(true);
         }
