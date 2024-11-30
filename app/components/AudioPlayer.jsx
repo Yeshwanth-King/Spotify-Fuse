@@ -10,6 +10,8 @@ export function AudioContextProvider({ children }) {
   const [songs, setSongs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [albums, setAlbums] = useState([]);
+  const [madeForYou, setMadeForYou] = useState([]);
+  const [trendingSongs, setTrendingSongs] = useState([]);
   const [ready, setReady] = useState(false);
   const [background, setBackground] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -67,6 +69,11 @@ export function AudioContextProvider({ children }) {
     (async () => {
       try {
         setLoading(true);
+        const respons = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/getDifferentSongs`
+        );
+        setMadeForYou(respons.data.getMadeForYouSongs);
+        setTrendingSongs(respons.data.getTrendingSongs);
         if (!songs.length > 0) {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BASE_URL}/api/getAllSongs`
@@ -265,6 +272,8 @@ export function AudioContextProvider({ children }) {
         handlePlay,
         handlePrev,
         handleProgressClick,
+        madeForYou,
+        trendingSongs,
       }}
     >
       {children}

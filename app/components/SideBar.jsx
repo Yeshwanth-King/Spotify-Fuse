@@ -33,7 +33,7 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <div
-        className={`bg-[#121212] text-white w-[75%] sm:w-[50%] lg:w-[100%] h-screen lg:h-[89vh] rounded-2xl p-1 flex flex-col fixed z-50 top-0 transition-transform duration-300 ${
+        className={`bg-[#121212] text-white w-[75%] sm:w-[50%] lg:w-[100%] h-screen rounded-2xl p-1 flex flex-col fixed z-50 top-0 transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:relative lg:translate-x-0`}
       >

@@ -11,28 +11,20 @@ export default function MainContent() {
 
   return (
     <div>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 mb-8">
         {loading
           ? // Skeleton Loader when data is loading
-            Array(4)
-              .fill("")
-              .map((_, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="bg-[#333333] overflow-hidden rounded-lg flex flex-col gap-2 relative group cursor-pointer"
-                  >
-                    {/* Skeleton for Album Cover */}
-                    <Skeleton className="w-full h-28 bg-gray-700 rounded-lg" />
-                    {/* Skeleton for Album Title */}
-                    <Skeleton className="w-full h-6 bg-gray-600 rounded-md" />
-                    {/* Skeleton for Play Button */}
-                    <div className="absolute bg-green-400 text-black rounded-full p-2 right-1 top-2 opacity-0 scale-75 transition-all duration-300 ease-in-out group-hover:opacity-100 group-hover:scale-90">
-                      <Skeleton className="w-6 h-6 rounded-full bg-gray-700" />
-                    </div>
-                  </div>
-                );
-              })
+            Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="flex items-center mb-8 bg-zinc-800/50 rounded-md overflow-hidden animate-pulse"
+              >
+                <div className="w-16 sm:w-20 h-16 sm:h-20 bg-zinc-700 flex-shrink-0" />
+                <div className="flex-1 p-4">
+                  <div className="h-4 bg-zinc-700 rounded w-3/4 mb-2" />
+                </div>
+              </div>
+            ))
           : // Render Albums when data is available
             albums?.map((album) => (
               <Link
