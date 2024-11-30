@@ -1,12 +1,18 @@
 "use client";
 import { useContext, useState } from "react";
 import { FaHeart } from "react-icons/fa";
-import { GoSidebarCollapse, GoPlus, GoArrowRight } from "react-icons/go";
+import {
+  GoSidebarCollapse,
+  GoPlus,
+  GoArrowRight,
+  GoArrowLeft,
+} from "react-icons/go";
 import { GiPin } from "react-icons/gi";
 import { TfiMenuAlt } from "react-icons/tfi";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { audioContext } from "./AudioPlayer";
+import Link from "next/link";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,14 +39,19 @@ export default function Sidebar() {
       >
         {/* Header */}
         <div className="mb-4 px-6 pt-6">
-          <div className="flex justify-between px-2 text-[#b3b3b3]">
+          <div className="flex justify-between px-2 pr-1 text-[#b3b3b3]">
             <div className="flex gap-2">
               <GoSidebarCollapse className="text-3xl" />
               <span className="text-lg font-bold">Your Library</span>
             </div>
             <div className="flex text-3xl gap-2">
               <GoPlus />
-              <GoArrowRight />
+              <GoArrowLeft
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+                className="bg-white text-black/90 rounded-md text-4xl"
+              />
             </div>
           </div>
           <div className="flex space-x-2 mt-2">
@@ -71,26 +82,28 @@ export default function Sidebar() {
             {albums.length > 0 &&
               albums.map((album) => {
                 return (
-                  <li
-                    key={album._id}
-                    className="flex items-center space-x-3 hover:bg-[#1f1f1f] p-2 cursor-pointer rounded-md"
-                  >
-                    <div className="w-[20%] overflow-hidden rounded-md">
-                      <img
-                        src={album.imageUrl}
-                        alt="Liked Songs"
-                        className="object-cover w-full h-full"
-                      />
-                    </div>
-                    <div>
-                      <p className="text-base font-medium">{album.title}</p>
-                      <div className="text-sm flex text-gray-400">
-                        <div className="flex gap-1 items-center">Album</div>
-                        <div>
-                          <span className="ml-1">•</span> {album.songs.length}
+                  <li key={album._id}>
+                    <Link
+                      href={"/album/" + album._id}
+                      className="flex items-center space-x-3 hover:bg-[#1f1f1f] p-2 cursor-pointer rounded-md"
+                    >
+                      <div className="w-[20%] overflow-hidden rounded-md">
+                        <img
+                          src={album.imageUrl}
+                          alt="Liked Songs"
+                          className="object-cover w-full h-full"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-base font-medium">{album.title}</p>
+                        <div className="text-sm flex text-gray-400">
+                          <div className="flex gap-1 items-center">Album</div>
+                          <div>
+                            <span className="ml-1">•</span> {album.songs.length}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   </li>
                 );
               })}

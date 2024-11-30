@@ -19,9 +19,11 @@ export default function BottomPlayer() {
   const closeModal = () => {
     setIsModalOpen(false); // Close the modal
   };
+
   return (
     <>
-      <div className="bg-black absolute bottom-0 z-50 p-2 w-full flex justify-between items-center max-sm:hidden">
+      {/* Full Bottom Player for larger screens */}
+      <div className="bg-black fixed bottom-0 z-50 p-2 w-full flex justify-between items-center max-sm:hidden">
         <div className="w-[33%]">
           <CurrentSong song={songs[currentSongIndex]} />
         </div>
@@ -34,9 +36,11 @@ export default function BottomPlayer() {
           />
         </div>
       </div>
-      <div className="absolute bottom-0 z-50 p-2 block w-full bg-transparent sm:hidden">
+
+      {/* Small Bottom Player for smaller screens */}
+      <div className="bg-black fixed bottom-0 z-50 p-2 w-full sm:hidden">
         <div
-          className={"flex items-center rounded-lg "}
+          className="flex items-center rounded-lg w-full"
           style={{ backgroundColor: background }}
         >
           {songs.length > 0 && (
@@ -44,6 +48,7 @@ export default function BottomPlayer() {
           )}
         </div>
       </div>
+
       {/* Modal */}
       {isModalOpen && (
         <SongModal

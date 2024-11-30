@@ -8,6 +8,7 @@ export const audioContext = createContext({});
 
 export function AudioContextProvider({ children }) {
   const [songs, setSongs] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [albums, setAlbums] = useState([]);
   const [ready, setReady] = useState(false);
   const [background, setBackground] = useState(null);
@@ -65,6 +66,7 @@ export function AudioContextProvider({ children }) {
   useEffect(() => {
     (async () => {
       try {
+        setLoading(true);
         if (!songs.length > 0) {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BASE_URL}/api/getAllSongs`
@@ -80,6 +82,7 @@ export function AudioContextProvider({ children }) {
       } catch (error) {
         console.log(error);
       }
+      setLoading(false);
     })();
   }, []);
 
@@ -250,6 +253,8 @@ export function AudioContextProvider({ children }) {
         currentTime,
         isDragging,
         isPlaying,
+        loading,
+        setIsPlaying,
         formatTime,
         toggleMute,
         handleDragEnd,
