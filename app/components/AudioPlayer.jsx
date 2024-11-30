@@ -152,6 +152,12 @@ export function AudioContextProvider({ children }) {
     setIsPlaying(true);
   };
 
+  const handlePlay = () => {
+    if (!audioRef.current) return;
+    audioRef.current.play();
+    setIsPlaying(true);
+  };
+
   const handleNext = () => {
     if (!audioRef.current) return;
 
@@ -227,6 +233,7 @@ export function AudioContextProvider({ children }) {
         songs,
         ready,
         setSongs,
+        setCurrentSongIndex,
         albums,
         currentSongIndex,
         onNext,
@@ -250,6 +257,7 @@ export function AudioContextProvider({ children }) {
         handleDragStart,
         handleNext,
         handlePlayPause,
+        handlePlay,
         handlePrev,
         handleProgressClick,
       }}
