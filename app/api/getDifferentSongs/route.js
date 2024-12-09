@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET(req, res) {
     await connectDB();
     const getFeaturedSongs = await Song.aggregate([
-        { $sample: { size: 6 } },
+        { $sample: { size: 4 } },
         {
             $project: {
                 _id: 1,
@@ -17,7 +17,7 @@ export async function GET(req, res) {
         },
     ])
     const getTrendingSongs = await Song.aggregate([
-        { $sample: { size: 6 } },
+        { $sample: { size: 4 } },
         {
             $project: {
                 _id: 1,
@@ -29,7 +29,7 @@ export async function GET(req, res) {
         },
     ])
     const getMadeForYouSongs = await Song.aggregate([
-        { $sample: { size: 6 } },
+        { $sample: { size: 4 } },
         {
             $project: {
                 _id: 1,

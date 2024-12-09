@@ -12,6 +12,7 @@ export function AudioContextProvider({ children }) {
   const [albums, setAlbums] = useState([]);
   const [madeForYou, setMadeForYou] = useState([]);
   const [trendingSongs, setTrendingSongs] = useState([]);
+  const [getFeaturedSongs, setGetFeaturedSongs] = useState([]);
   const [ready, setReady] = useState(false);
   const [background, setBackground] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -74,6 +75,7 @@ export function AudioContextProvider({ children }) {
         );
         setMadeForYou(respons.data.getMadeForYouSongs);
         setTrendingSongs(respons.data.getTrendingSongs);
+        setGetFeaturedSongs(respons.data.getFeaturedSongs);
         if (!songs.length > 0) {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BASE_URL}/api/getAllSongs`
@@ -274,6 +276,7 @@ export function AudioContextProvider({ children }) {
         handleProgressClick,
         madeForYou,
         trendingSongs,
+        getFeaturedSongs,
       }}
     >
       {children}

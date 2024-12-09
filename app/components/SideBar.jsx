@@ -33,7 +33,7 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <div
-        className={`bg-[#121212] text-white w-[75%] sm:w-[50%] lg:w-[100%] h-screen rounded-2xl p-1 flex flex-col fixed z-50 top-0 transition-transform duration-300 ${
+        className={`lg:bg-transparent bg-[#121212]  text-white w-[75%] sm:w-[50%] lg:w-[100%] min-h-screen rounded-2xl p-1 flex flex-col fixed z-50 top-0 transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:relative lg:translate-x-0`}
       >
@@ -50,7 +50,7 @@ export default function Sidebar() {
                 onClick={() => {
                   setIsOpen(false);
                 }}
-                className="bg-white text-black/90 rounded-md text-4xl"
+                className="bg-white text-black/90 rounded-md text-4xl lg:hidden"
               />
             </div>
           </div>

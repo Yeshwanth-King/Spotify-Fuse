@@ -18,7 +18,7 @@ export default function Home() {
           <NavBar />
           {/* Sidebar and Content */}
           <div className="flex">
-            <div className="lg:w-[25%]">
+            <div className="lg:w-[25%] bg-[#121212] rounded-2xl">
               <Sidebar />
             </div>
             <div className="lg:w-[75%] w-full text-white px-4">
@@ -26,6 +26,8 @@ export default function Home() {
                 <h1 className="text-5xl sm:text-6xl mb-5">Good Afternoon</h1>
                 <MainContent />
                 <SectionGrid title="Made for you" isLoading={loading} />
+                <SectionGrid title="Trending Songs" isLoading={loading} />
+                <SectionGrid title="Featured Songs" isLoading={loading} />
               </div>
             </div>
             <BottomPlayer />
