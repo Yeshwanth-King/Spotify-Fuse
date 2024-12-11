@@ -36,11 +36,14 @@ export default function AlbumaPage() {
       setAlbum(response.data.album);
       setAlbumSongs(response.data.album.songs);
     })();
-  }, []);
+  }, [id]); // Refetch when the album ID changes
 
+  // Update the songs in the audio context when the album changes
   useEffect(() => {
-    setSongs(albumSongs);
-  }, [isPlaying]);
+    if (albumSongs.length > 0) {
+      setSongs(albumSongs); // Update songs in the audio context
+    }
+  }, [albumSongs]);
 
   useEffect(() => {
     const fetchDurations = async () => {
@@ -184,7 +187,7 @@ export default function AlbumaPage() {
               </ScrollArea>
             </div>
           </div>
-          {songs.length > 0 && <BottomPlayer />}
+          <BottomPlayer />
         </div>
       </ScrollArea>
     </div>
